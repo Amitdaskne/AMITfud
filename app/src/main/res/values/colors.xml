@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="zomato_red">#E23744</color>
+    <color name="zomato_bg">#F4F4F4</color>
+    <color name="text_dark">#1C1C1C</color>
+    <color name="text_gray">#7E808C</color>
+    <color name="white">#FFFFFF</color>
+    <color name="skeleton_bg">#E0E0E0</color>
+</resources>
