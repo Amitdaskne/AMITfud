@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:padding="16dp" android:background="@color/white"
+    android:layout_marginBottom="8dp">
+    
+    <TextView android:id="@+id/tvResName" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Restaurant Name" android:textSize="20sp" android:textStyle="bold" android:textColor="@color/text_dark"/>
+        
+    <TextView android:id="@+id/tvResAddress" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Address" android:textSize="12sp" android:textColor="@color/text_gray" android:layout_marginTop="4dp"/>
+        
+    <ImageView android:id="@+id/ivResImage" android:layout_width="match_parent" android:layout_height="150dp"
+        android:scaleType="centerCrop" android:background="@color/skeleton_bg" android:layout_marginTop="12dp"/>
+</LinearLayout>

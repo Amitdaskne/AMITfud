@@ -27,22 +27,23 @@
                     android:src="@android:drawable/ic_menu_add" android:tint="@color/zomato_red"/>
             </LinearLayout>
 
-            <!-- Shimmer & Content -->
-            <com.facebook.shimmer.ShimmerFrameLayout android:id="@+id/shimmerLayout"
-                android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp">
-                <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <View android:layout_width="120dp" android:layout_height="20dp" android:background="@color/skeleton_bg" android:layout_margin="16dp"/>
-                    <View android:layout_width="match_parent" android:layout_height="150dp" android:background="@color/skeleton_bg" android:layout_margin="16dp"/>
-                </LinearLayout>
-            </com.facebook.shimmer.ShimmerFrameLayout>
-
-            <LinearLayout android:id="@+id/mainContent" android:visibility="gone"
-                android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+            <!-- Main Content Container -->
+            <LinearLayout android:id="@+id/mainContent" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical">
+                
+                <!-- Restaurants Section -->
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Top Restaurants near you" android:textSize="18sp"
-                    android:textStyle="bold" android:layout_margin="16dp"/>
+                    android:text="Top Restaurants" android:textSize="20sp" android:textStyle="bold"
+                    android:layout_margin="16dp"/>
                 <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvRestaurants"
-                    android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none"/>
+                    android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+                <!-- Products Section -->
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Popular Dishes" android:textSize="20sp" android:textStyle="bold"
+                    android:layout_margin="16dp" android:layout_marginTop="24dp"/>
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvProducts"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -52,4 +53,36 @@
         android:id="@+id/bottomNav" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" android:background="@color/white"
         app:menu="@menu/bottom_nav_menu" app:itemIconTint="@color/zomato_red" app:itemTextColor="@color/text_dark"/>
+
+    <!-- 🔥 FULL SCREEN BLUR LOADING OVERLAY 🔥 -->
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E6FFFFFF" 
+        android:clickable="true"
+        android:focusable="true">
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+            
+            <ProgressBar
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:indeterminateTint="@color/zomato_red"/>
+                
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fetching Delicious Food..."
+                android:textColor="@color/text_dark"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"/>
+        </LinearLayout>
+    </FrameLayout>
 </RelativeLayout>
