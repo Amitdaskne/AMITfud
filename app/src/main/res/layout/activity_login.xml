@@ -1,43 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="24dp" android:background="@color/white">
+    android:scrollbars="none" android:background="@color/white">
+    
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="24dp">
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Login to AMITfud" android:textSize="28sp" android:textStyle="bold"
-        android:textColor="@color/text_dark" android:layout_marginTop="50dp"/>
+        <TextView android:id="@+id/tvTitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Login to AMITfud" android:textSize="28sp" android:textStyle="bold"
+            android:textColor="@color/text_dark" android:layout_marginTop="50dp"/>
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Enter your mobile number to continue" android:textColor="@color/text_gray"
-        android:layout_marginTop="8dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Enter your details to continue" android:textColor="@color/text_gray"
+            android:layout_marginTop="8dp" android:layout_marginBottom="32dp"/>
 
-    <EditText android:id="@+id/etPhone" android:layout_width="match_parent"
-        android:layout_height="50dp" android:hint="10-digit Mobile Number"
-        android:inputType="phone" android:maxLength="10"
-        android:layout_marginTop="32dp" android:background="@drawable/bg_search"
-        android:padding="12dp" android:textColor="@color/text_dark"/>
+        <!-- Email Input -->
+        <EditText android:id="@+id/etEmail" android:layout_width="match_parent"
+            android:layout_height="55dp" android:hint="Email Address"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/bg_search" android:padding="16dp"
+            android:textColor="@color/text_dark" android:layout_marginBottom="16dp"/>
 
-    <Button android:id="@+id/btnGetOtp" android:layout_width="match_parent"
-        android:layout_height="50dp" android:text="Send OTP"
-        android:backgroundTint="@color/zomato_red" android:textColor="@color/white"
-        android:layout_marginTop="16dp"/>
+        <!-- Password Input -->
+        <EditText android:id="@+id/etPassword" android:layout_width="match_parent"
+            android:layout_height="55dp" android:hint="Password"
+            android:inputType="textPassword"
+            android:background="@drawable/bg_search" android:padding="16dp"
+            android:textColor="@color/text_dark" android:layout_marginBottom="16dp"/>
 
-    <LinearLayout android:id="@+id/otpLayout" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:orientation="vertical"
-        android:visibility="gone" android:layout_marginTop="16dp">
-        
-        <EditText android:id="@+id/etOtp" android:layout_width="match_parent"
-            android:layout_height="50dp" android:hint="Enter 6-digit OTP"
-            android:inputType="number" android:maxLength="6"
-            android:background="@drawable/bg_search" android:padding="12dp"/>
-            
-        <Button android:id="@+id/btnVerifyOtp" android:layout_width="match_parent"
-            android:layout_height="50dp" android:text="Verify &amp; Login"
-            android:backgroundTint="@color/zomato_red" android:textColor="@color/white"
-            android:layout_marginTop="16dp"/>
+        <!-- Confirm Password (Sirf Registration ke waqt dikhega) -->
+        <EditText android:id="@+id/etConfirmPassword" android:layout_width="match_parent"
+            android:layout_height="55dp" android:hint="Confirm Password"
+            android:inputType="textPassword" android:visibility="gone"
+            android:background="@drawable/bg_search" android:padding="16dp"
+            android:textColor="@color/text_dark" android:layout_marginBottom="16dp"/>
+
+        <!-- Pill Type Main Button -->
+        <Button android:id="@+id/btnAction" android:layout_width="match_parent"
+            android:layout_height="55dp" android:text="LOGIN"
+            android:background="@drawable/bg_pill_red"
+            android:textColor="@color/white" android:textStyle="bold"
+            android:textSize="16sp" android:layout_marginTop="16dp"/>
+
+        <!-- Toggle Text (Login <-> Register) -->
+        <TextView android:id="@+id/tvToggleAuth" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:text="New here? Create Account"
+            android:textColor="@color/zomato_red" android:textStyle="bold"
+            android:gravity="center" android:padding="16dp" android:layout_marginTop="16dp"/>
+
+        <!-- Pill Type Outline Button (Forgot Password - Placeholder) -->
+        <Button android:id="@+id/btnForgot" android:layout_width="match_parent"
+            android:layout_height="55dp" android:text="FORGOT PASSWORD?"
+            android:background="@drawable/bg_pill_outline"
+            android:textColor="@color/zomato_red" android:textStyle="bold"
+            android:visibility="gone" android:layout_marginTop="8dp"/>
+
+        <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_gravity="center"
+            android:layout_marginTop="20dp" android:visibility="gone"/>
     </LinearLayout>
-
-    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_gravity="center"
-        android:layout_marginTop="20dp" android:visibility="gone"/>
-</LinearLayout>
+</ScrollView>
