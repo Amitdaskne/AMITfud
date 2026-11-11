@@ -2,61 +2,40 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:scrollbars="none" android:background="@color/white">
-    
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="24dp">
-
+        android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal">
+        
         <TextView android:id="@+id/tvTitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Login to AMITfud" android:textSize="28sp" android:textStyle="bold"
             android:textColor="@color/text_dark" android:layout_marginTop="50dp"/>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Enter your details to continue" android:textColor="@color/text_gray"
-            android:layout_marginTop="8dp" android:layout_marginBottom="32dp"/>
-
-        <!-- Email Input -->
         <EditText android:id="@+id/etEmail" android:layout_width="match_parent"
-            android:layout_height="55dp" android:hint="Email Address"
-            android:inputType="textEmailAddress"
-            android:background="@drawable/bg_search" android:padding="16dp"
-            android:textColor="@color/text_dark" android:layout_marginBottom="16dp"/>
+            android:layout_height="55dp" android:hint="Email Address" android:inputType="textEmailAddress"
+            android:background="@drawable/bg_pill_input" android:paddingStart="24dp" android:paddingEnd="24dp"
+            android:textColor="@color/text_dark" android:layout_marginTop="32dp" android:layout_marginBottom="16dp"/>
 
-        <!-- Password Input -->
         <EditText android:id="@+id/etPassword" android:layout_width="match_parent"
-            android:layout_height="55dp" android:hint="Password"
-            android:inputType="textPassword"
-            android:background="@drawable/bg_search" android:padding="16dp"
+            android:layout_height="55dp" android:hint="Password" android:inputType="textPassword"
+            android:background="@drawable/bg_pill_input" android:paddingStart="24dp" android:paddingEnd="24dp"
             android:textColor="@color/text_dark" android:layout_marginBottom="16dp"/>
 
-        <!-- Confirm Password (Sirf Registration ke waqt dikhega) -->
         <EditText android:id="@+id/etConfirmPassword" android:layout_width="match_parent"
-            android:layout_height="55dp" android:hint="Confirm Password"
-            android:inputType="textPassword" android:visibility="gone"
-            android:background="@drawable/bg_search" android:padding="16dp"
-            android:textColor="@color/text_dark" android:layout_marginBottom="16dp"/>
+            android:layout_height="55dp" android:hint="Confirm Password" android:inputType="textPassword"
+            android:visibility="gone" android:background="@drawable/bg_pill_input"
+            android:paddingStart="24dp" android:paddingEnd="24dp" android:layout_marginBottom="16dp"/>
 
-        <!-- Pill Type Main Button -->
         <Button android:id="@+id/btnAction" android:layout_width="match_parent"
-            android:layout_height="55dp" android:text="LOGIN"
-            android:background="@drawable/bg_pill_red"
-            android:textColor="@color/white" android:textStyle="bold"
-            android:textSize="16sp" android:layout_marginTop="16dp"/>
+            android:layout_height="55dp" android:text="LOGIN" android:background="@drawable/bg_pill_red"
+            android:textColor="@color/white" android:textStyle="bold" android:textSize="16sp"/>
 
-        <!-- Toggle Text (Login <-> Register) -->
         <TextView android:id="@+id/tvToggleAuth" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:text="New here? Create Account"
             android:textColor="@color/zomato_red" android:textStyle="bold"
-            android:gravity="center" android:padding="16dp" android:layout_marginTop="16dp"/>
+            android:gravity="center" android:padding="16dp"/>
 
-        <!-- Pill Type Outline Button (Forgot Password - Placeholder) -->
-        <Button android:id="@+id/btnForgot" android:layout_width="match_parent"
-            android:layout_height="55dp" android:text="FORGOT PASSWORD?"
-            android:background="@drawable/bg_pill_outline"
-            android:textColor="@color/zomato_red" android:textStyle="bold"
-            android:visibility="gone" android:layout_marginTop="8dp"/>
-
-        <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_gravity="center"
-            android:layout_marginTop="20dp" android:visibility="gone"/>
+        <!-- Lottie Breaking Egg Animation (Hidden by default) -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/eggAnimation" android:layout_width="150dp" android:layout_height="150dp"
+            android:visibility="gone" android:layout_marginTop="20dp"/>
     </LinearLayout>
 </ScrollView>

@@ -5,107 +5,85 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText etEmail, etPassword, etConfirmPassword;
-    private Button btnAction, btnForgot;
+    private Button btnAction;
     private TextView tvTitle, tvToggleAuth;
-    private ProgressBar progressBar;
-    
-    private FirebaseAuth mAuth;
+    private LottieAnimationView eggAnimation;
     private boolean isLoginMode = true;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_login);
-
         mAuth = FirebaseAuth.getInstance();
+        
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnAction = findViewById(R.id.btnAction);
-        btnForgot = findViewById(R.id.btnForgot);
         tvTitle = findViewById(R.id.tvTitle);
         tvToggleAuth = findViewById(R.id.tvToggleAuth);
-        progressBar = findViewById(R.id.progressBar);
+        eggAnimation = findViewById(R.id.eggAnimation);
+        eggAnimation.setAnimation("egg_breaking.json");
 
         btnAction.setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
+            if (email.isEmpty() || password.isEmpty()) return;
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (password.length() < 6) {
-                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            progressBar.setVisibility(View.VISIBLE);
-            btnAction.setEnabled(false);
+            // Show Egg Animation
+            btnAction.setVisibility(View.GONE);
+            eggAnimation.setVisibility(View.VISIBLE);
+            eggAnimation.playAnimation();
 
             if (isLoginMode) {
-                loginUser(email, password);
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) goToNext();
+                    else showError(task.getException().getMessage());
+                });
             } else {
-                String confirmPass = etConfirmPassword.getText().toString().trim();
-                if (!password.equals(confirmPass)) {
-                    Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    btnAction.setEnabled(true);
-                    return;
+                if (!password.equals(etConfirmPassword.getText().toString())) {
+                    showError("Passwords do not match"); return;
                 }
-                registerUser(email, password);
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) goToNext();
+                    else showError(task.getException().getMessage());
+                });
             }
         });
 
         tvToggleAuth.setOnClickListener(v -> {
             isLoginMode = !isLoginMode;
-            if (isLoginMode) {
-                tvTitle.setText("Login to AMITfud");
-                btnAction.setText("LOGIN");
-                etConfirmPassword.setVisibility(View.GONE);
-                btnForgot.setVisibility(View.GONE);
-                tvToggleAuth.setText("New here? Create Account");
-            } else {
-                tvTitle.setText("Create Account");
-                btnAction.setText("REGISTER");
-                etConfirmPassword.setVisibility(View.VISIBLE);
-                btnForgot.setVisibility(View.GONE);
-                tvToggleAuth.setText("Already have an account? Login");
-            }
+            etConfirmPassword.setVisibility(isLoginMode ? View.GONE : View.VISIBLE);
+            btnAction.setText(isLoginMode ? "LOGIN" : "REGISTER");
+            tvTitle.setText(isLoginMode ? "Login to AMITfud" : "Create Account");
+            tvToggleAuth.setText(isLoginMode ? "New here? Create Account" : "Already have an account? Login");
         });
     }
 
-    private void loginUser(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
+    private void goToNext() {
+        // Check if onboarding is done
+        String uid = mAuth.getCurrentUser().getUid();
+        FirebaseDatabase.getInstance().getReference("users").child(uid).child("name").get()
             .addOnCompleteListener(task -> {
-                progressBar.setVisibility(View.GONE);
-                btnAction.setEnabled(true);
-                if (task.isSuccessful()) {
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    finish();
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    startActivity(new Intent(this, HomeActivity.class));
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(this, OnboardingActivity.class));
                 }
+                finish();
             });
     }
 
-    private void registerUser(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(task -> {
-                progressBar.setVisibility(View.GONE);
-                btnAction.setEnabled(true);
-                if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    finish();
-                } else {
-                    Toast.makeText(LoginActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+    private void showError(String msg) {
+        eggAnimation.setVisibility(View.GONE);
+        btnAction.setVisibility(View.VISIBLE);
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }
