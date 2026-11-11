@@ -2,18 +2,18 @@ package com.amit.fud;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import org.maplibre.android.MapLibre;
-import org.maplibre.android.camera.CameraPosition;
 import org.maplibre.android.camera.CameraUpdateFactory;
 import org.maplibre.android.geometry.LatLng;
+import org.maplibre.android.location.LocationComponent;
+import org.maplibre.android.location.LocationComponentActivationOptions;
+import org.maplibre.android.location.modes.CameraMode;
+import org.maplibre.android.location.modes.RenderMode;
 import org.maplibre.android.maps.MapView;
 import org.maplibre.android.maps.MapLibreMap;
 import org.maplibre.android.maps.Style;
@@ -21,12 +21,12 @@ import org.maplibre.android.maps.Style;
 public class MainActivity extends AppCompatActivity {
     private MapView mapView;
     private MapLibreMap mapLibreMap;
-    private FusedLocationProviderClient fusedLocationClient;
     private String appMode;
 
     @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
         // MapLibre Initialize
         MapLibre.getInstance(this);
         
@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         mapView.getMapAsync(map -> {
             mapLibreMap = map;
             
@@ -47,36 +45,47 @@ public class MainActivity extends AppCompatActivity {
             String styleUrl = "https://demotiles.maplibre.org/style.json";
             
             map.setStyle(styleUrl, style -> {
-                enableLocation();
+                enableLocation(style);
             });
         });
     }
 
-    private void enableLocation() {
+    private void enableLocation(Style style) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             return;
         }
+
+        // MapLibre LocationComponent Setup
+        LocationComponent locationComponent = mapLibreMap.getLocationComponent();
         
-        mapLibreMap.setMyLocationEnabled(true);
+        // Activate with default options
+        LocationComponentActivationOptions options = LocationComponentActivationOptions
+                .builder(this, style)
+                .useDefaultLocationEngine(true)
+                .build();
         
-        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-            if (location != null) {
-                // Camera ko user ki location pe le jao
-                LatLng userLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                mapLibreMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 15.0));
-            } else {
-                // Agar location nahi mili toh default (India) dikhao
-                mapLibreMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(20.5937, 78.9629), 4.0));
-            }
-        });
+        locationComponent.activateLocationComponent(options);
+        
+        // Enable location visibility
+        locationComponent.setLocationComponentEnabled(true);
+        
+        // Set camera mode to tracking and render mode to compass
+        locationComponent.setCameraMode(CameraMode.TRACKING);
+        locationComponent.setRenderMode(RenderMode.COMPASS);
+        
+        // Default camera position (India)
+        mapLibreMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(20.5937, 78.9629), 4.0));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            enableLocation();
+            // Re-fetch style to enable location
+            if (mapLibreMap != null && mapLibreMap.getStyle() != null) {
+                enableLocation(mapLibreMap.getStyle());
+            }
         }
     }
 
