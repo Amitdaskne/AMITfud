@@ -30,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
         tvTitle = findViewById(R.id.tvTitle);
         tvToggleAuth = findViewById(R.id.tvToggleAuth);
         eggAnimation = findViewById(R.id.eggAnimation);
+        
+        // Animation file set karo
         eggAnimation.setAnimation("egg_breaking.json");
 
         btnAction.setOnClickListener(v -> {
@@ -37,14 +39,14 @@ public class LoginActivity extends AppCompatActivity {
             String password = etPassword.getText().toString().trim();
             if (email.isEmpty() || password.isEmpty()) return;
 
-            // Show Egg Animation
+            // Egg Animation Start
             btnAction.setVisibility(View.GONE);
             eggAnimation.setVisibility(View.VISIBLE);
             eggAnimation.playAnimation();
 
             if (isLoginMode) {
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) goToNext();
+                    if (task.isSuccessful()) checkOnboarding();
                     else showError(task.getException().getMessage());
                 });
             } else {
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                     showError("Passwords do not match"); return;
                 }
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) goToNext();
+                    if (task.isSuccessful()) checkOnboarding();
                     else showError(task.getException().getMessage());
                 });
             }
@@ -67,11 +69,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void goToNext() {
-        // Check if onboarding is done
+    private void checkOnboarding() {
         String uid = mAuth.getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference("users").child(uid).child("name").get()
             .addOnCompleteListener(task -> {
+                eggAnimation.cancelAnimation();
                 if (task.isSuccessful() && task.getResult().exists()) {
                     startActivity(new Intent(this, HomeActivity.class));
                 } else {
@@ -82,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showError(String msg) {
+        eggAnimation.cancelAnimation();
         eggAnimation.setVisibility(View.GONE);
         btnAction.setVisibility(View.VISIBLE);
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

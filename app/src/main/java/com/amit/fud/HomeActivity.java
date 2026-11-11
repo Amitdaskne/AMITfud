@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -33,7 +32,6 @@ public class HomeActivity extends AppCompatActivity {
 
         shimmerLayout.startShimmer();
 
-        // Fetch User Data
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -42,34 +40,39 @@ public class HomeActivity extends AppCompatActivity {
                     tvName.setText(snapshot.child("name").getValue(String.class));
                     tvAddress.setText(snapshot.child("address").getValue(String.class));
                     String dpUrl = snapshot.child("dp").getValue(String.class);
-                    if (dpUrl != null) {
-                        Glide.with(HomeActivity.this).load(dpUrl).circleCrop().into(ivDp);
-                    }
+                    if (dpUrl != null) Glide.with(HomeActivity.this).load(dpUrl).circleCrop().into(ivDp);
                 }
             }
             @Override public void onCancelled(DatabaseError error) {}
         });
 
-        // Shimmer to Content Transition
         new Handler().postDelayed(() -> {
             shimmerLayout.stopShimmer();
             shimmerLayout.setVisibility(View.GONE);
             mainContent.setVisibility(View.VISIBLE);
-        }, 2000);
+        }, 1500);
 
-        btnCart.setOnClickListener(v -> {
-            startActivity(new Intent(this, CartActivity.class));
-        });
+        btnCart.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
 
+        // 🔥 Bottom Navigation Navigation Logic 🔥
         bottomNav.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_profile) {
-                Toast.makeText(this, "Profile Tab (Coming Soon)", Toast.LENGTH_SHORT).show();
+            if (item.getItemId() == R.id.nav_home) {
+                return true;
+            } else if (item.getItemId() == R.id.nav_profile) {
+                startActivity(new Intent(this, ProfileActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_settings) {
-                Toast.makeText(this, "Settings Tab (Coming Soon)", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             }
-            return true;
+            return false;
         });
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setSelectedItemId(R.id.nav_home);
     }
 }
