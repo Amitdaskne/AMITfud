@@ -1,0 +1,23 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.amit.fud'
+    compileSdk 34
+    defaultConfig {
+        applicationId "com.amit.fud"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    // MapLibre for Free Maps
+    implementation 'org.maplibre.gl:android-sdk:11.1.0'
+    // Location Services
+    implementation 'com.google.android.gms:play-services-location:21.2.0'
+}
