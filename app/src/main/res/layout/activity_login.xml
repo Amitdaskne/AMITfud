@@ -32,7 +32,7 @@
             android:background="@drawable/bg_search" android:padding="12dp"/>
             
         <Button android:id="@+id/btnVerifyOtp" android:layout_width="match_parent"
-            android:layout_height="50dp" android:text="Verify & Login"
+            android:layout_height="50dp" android:text="Verify &amp; Login"
             android:backgroundTint="@color/zomato_red" android:textColor="@color/white"
             android:layout_marginTop="16dp"/>
     </LinearLayout>
