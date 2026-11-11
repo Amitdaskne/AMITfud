@@ -41,23 +41,26 @@ public class MainActivity extends AppCompatActivity {
 
         mapView.getMapAsync(map -> {
             mapLibreMap = map;
-            String styleUrl = "https://demotiles.maplibre.org/style.json";
+            
+            // 🔥 ZOMATO/UBER JAISA STREET MAP STYLE (100% FREE, NO API KEY) 🔥
+            String styleUrl = "https://tiles.openfreemap.org/styles/bright";
+            
             map.setStyle(styleUrl, style -> {
                 enableLocation(style);
             });
         });
 
-        // Current Location Button Click
         btnMyLocation.setOnClickListener(v -> {
             if (locationComponent != null && locationComponent.getLastKnownLocation() != null) {
                 Location loc = locationComponent.getLastKnownLocation();
                 LatLng userLoc = new LatLng(loc.getLatitude(), loc.getLongitude());
-                // Smoothly animate camera to current location
                 mapLibreMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 16.0), 1000);
                 Toast.makeText(this, "Centered to your location", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Location not available yet. Wait for GPS.", Toast.LENGTH_SHORT).show();
-                enableLocation(mapLibreMap.getStyle()); // Retry enabling
+                Toast.makeText(this, "Waiting for GPS...", Toast.LENGTH_SHORT).show();
+                if (mapLibreMap != null && mapLibreMap.getStyle() != null) {
+                    enableLocation(mapLibreMap.getStyle());
+                }
             }
         });
     }
@@ -77,14 +80,11 @@ public class MainActivity extends AppCompatActivity {
         
         locationComponent.activateLocationComponent(options);
         locationComponent.setLocationComponentEnabled(true);
-        
-        // --- LIVE TRACKING (Local) ---
-        // TRACKING mode: Map aapke phone ke sath sath move karega (Live)
-        // GPS mode: Jab phone ghumega, map bhi ghumega
         locationComponent.setCameraMode(CameraMode.TRACKING_GPS);
         locationComponent.setRenderMode(RenderMode.COMPASS);
         
-        mapLibreMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(20.5937, 78.9629), 4.0));
+        // Default camera India pe (zoom level 15 se streets dikhne lagengi)
+        mapLibreMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(20.5937, 78.9629), 15.0));
     }
 
     @Override
